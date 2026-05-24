@@ -1,0 +1,18 @@
+# GAS設定ファイル
+.clasp.json
+.clasprc.json
+appsscript.json
+
+# 機密情報
+*.credentials
+*.secret
+config.gs
+00_config.gs
+
+# エディタ設定
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

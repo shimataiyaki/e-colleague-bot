@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>e-colleague ダッシュボード</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-container">
+      <a href="/e-colleague/" class="site-title">e-colleague</a>
+      <span class="header-group" id="groupLabel">---</span>
+      <div class="header-actions">
+        <button onclick="refreshTasks()" class="btn-header">更新</button>
+        <button onclick="logout()" class="btn-header btn-header-secondary">ログアウト</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="summary" id="summary">
+      <div class="summary-item">
+        <span class="summary-label">未着手</span>
+        <span class="summary-value" id="countTodo">0</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">進行中</span>
+        <span class="summary-value" id="countProgress">0</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">完了</span>
+        <span class="summary-value" id="countDone">0</span>
+      </div>
+    </div>
+
+    <div class="task-controls">
+      <button onclick="deleteAllCompleted()" class="btn-danger" id="btnDeleteAll" style="display:none;">
+        完了タスクをすべて削除
+      </button>
+    </div>
+
+    <div class="task-list" id="taskList">
+      <div class="loading">読み込み中...</div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

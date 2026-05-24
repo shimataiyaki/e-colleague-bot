@@ -128,4 +128,91 @@ function buildTaskListMessage(groupId) {
             type: "box", layout: "vertical", flex: 2,
             contents: [
               { type: "text", text: '📅 ' + (t.deadline || '未設定'), size: "xs", color: "#888888", align: "end" },
-              { type: "text", text: t.status, size: "xs", color: t.status === '進行中' ? '#FF9800' : '#999999',
+              { type: "text", text: t.status, size: "xs", color: t.status === '進行中' ? '#FF9800' : '#999999', align: "end" }
+            ]
+          }
+        ]
+      });
+      if (idx < chunk.length - 1) {
+        bodyContents.push({ type: "separator", color: "#E0E0E0" });
+      }
+    });
+
+    bubbles.push({
+      type: "bubble",
+      header: {
+        type: "box", layout: "vertical", backgroundColor: "#333333",
+        contents: [
+          { type: "text", text: '📋 タスク一覧 (' + (i/5 + 1) + ')', color: "#FFFFFF", weight: "bold", size: "sm", align: "center" }
+        ]
+      },
+      body: {
+        type: "box", layout: "vertical", spacing: "sm", backgroundColor: "#FAFAFA",
+        contents: bodyContents
+      }
+    });
+  }
+
+  return {
+    type: "flex",
+    altText: '現在のタスク一覧（' + activeTasks.length + '件）',
+    contents: { type: "carousel", contents: bubbles }
+  };
+}
+
+function buildMenuMessage() {
+  return {
+    type: "flex",
+    altText: "e-colleague メニュー",
+    contents: {
+      type: "bubble",
+      header: {
+        type: "box", layout: "vertical", backgroundColor: "#333333",
+        contents: [
+          { type: "text", text: "📋 e-colleague メニュー", color: "#FFFFFF", weight: "bold", size: "md", align: "center" }
+        ]
+      },
+      body: {
+        type: "box", layout: "vertical", spacing: "sm", backgroundColor: "#FAFAFA",
+        contents: [
+          { type: "text", text: "タスク管理をかんたんに。", size: "xs", color: "#999999", align: "center" }
+        ]
+      },
+      footer: {
+        type: "box", layout: "vertical", spacing: "sm", backgroundColor: "#FAFAFA",
+        contents: [
+          { type: "button", style: "primary", color: "#666666",
+            action: { type: "message", label: "📋 タスク一覧", text: "タスク一覧" } },
+          { type: "button", style: "primary", color: "#999999",
+            action: { type: "message", label: "❓ 使い方", text: "使い方" } },
+          { type: "button", style: "primary", color: "#AAAAAA",
+            action: { type: "message", label: "✅ 完了報告", text: "完了" } }
+        ]
+      }
+    }
+  };
+}
+
+function buildIncompleteMessage(extracted) {
+  const question = extracted.question || 'タスクの詳細（期限や担当者）を教えてください。';
+  const missing = extracted.missing_fields || [];
+  
+  let msg = '📋 タスクを検出しました。';
+  
+  if (extracted.task) {
+    msg += '\n📌 内容: ' + extracted.task;
+  }
+  
+  if (missing.length > 0) {
+    const missingLabels = { 'task': 'タスク内容', 'deadline': '期限', 'assignee': '担当者' };
+    const missingList = missing.map(f => '・' + (missingLabels[f] || f)).join('\n');
+    msg += '\n\n以下の情報が不足しています:\n' + missingList;
+  } else {
+    msg += '\n\n詳細情報が不足しています。';
+  }
+  
+  msg += '\n\n' + question;
+  msg += '\n\n（このタスクに関する追加情報をお送りください。30分間お待ちしています）';
+  
+  return msg;
+}

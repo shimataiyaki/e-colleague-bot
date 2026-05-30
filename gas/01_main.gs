@@ -1,6 +1,7 @@
 // ==============================================
-// e-colleague v2.1 — メインエントリポイント
+// e-colleague v2.0 — メインエントリポイント
 // トリガー → ゴール確認 → タスク化
+// 個人トーク対応（アクティベートキー確認）
 // ==============================================
 
 function doPost(e) {
@@ -59,6 +60,12 @@ function processMessage(event) {
   const userId = event.userId;
   const groupId = event.groupId;
 
+  // 個人トーク処理
+  if (!groupId) {
+    handlePersonalChat(event);
+    return;
+  }
+
   const productKey = getConfigValue('REGISTER_KEYWORD') || getConfigValue('PRODUCT_KEY');
   if (productKey && userMessage === productKey) {
     registerGroup(groupId, event.replyToken);
@@ -99,7 +106,7 @@ function processMessage(event) {
   if (isCompletionMessage(userMessage)) {
     const completedTask = handleCompletionByChat(groupId, userMessage);
     if (completedTask) {
-      replyToLine(event.replyToken, '✅ タスク「' + completedTask + '」を完了にしました。');
+      replyToLine(event.replyToken, 'タスク「' + completedTask + '」を完了にしました。');
     }
     return;
   }
@@ -118,7 +125,7 @@ function processMessage(event) {
       if (taskData.is_task_complete) {
         saveGoalPending(groupId, userId, taskData);
         replyToLine(event.replyToken, 
-          '📋 タスクを検出しました：「' + taskData.task + '」\n\n' +
+          'タスクを検出しました：「' + taskData.task + '」\n\n' +
           'このタスクの「ここまでやればOK」という目安はありますか？\n' +
           '（なければAIが提案します）'
         );
@@ -135,6 +142,17 @@ function processMessage(event) {
   const pendingTask = getPendingTask(groupId, userId);
   if (pendingTask) {
     handleCompletion(event, pendingTask);
+    return;
+  }
+}
+
+function handlePersonalChat(event) {
+  const userMessage = event.messageText;
+
+  const menuKeyword = getConfigValue('MENU_KEYWORD') || 'メニュー';
+  if (userMessage === menuKeyword) {
+    const menuMessage = buildPersonalMenuMessage();
+    replyFlexMessage(event.replyToken, menuMessage);
     return;
   }
 }

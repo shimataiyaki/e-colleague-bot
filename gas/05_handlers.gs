@@ -1,5 +1,6 @@
 // ==============================================
 // e-colleague v2.0 — ハンドラ
+// アクティベートキー確認追加
 // ==============================================
 
 function handleCompletion(event, pendingTask) {
@@ -127,6 +128,16 @@ function handlePostbackAction(event) {
     } else {
       replyToLine(event.replyToken, '詳細情報が見つかりませんでした。');
     }
+    return;
+  }
+
+  if (params.action === 'showCurrentKey') {
+    const currentKey = getConfigValue('REGISTER_KEYWORD') || getConfigValue('PRODUCT_KEY') || '未設定';
+    replyToLine(event.replyToken, 
+      '現在のアクティベートキー\n\n' +
+      currentKey + '\n\n' +
+      'このキーをグループに送信して認証してください。'
+    );
     return;
   }
 }

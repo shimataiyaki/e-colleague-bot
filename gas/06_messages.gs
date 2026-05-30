@@ -1,11 +1,12 @@
 // ==============================================
 // e-colleague v2.0 — Flex Message 生成
 // 完了の目安（タスクタイプ表示付き）
+// 個人トーク用メニュー追加
 // ==============================================
 
 function buildCompleteMessage(extracted, taskId, dod) {
   const bodyContents = [
-    { type: "text", text: "📌 内容", size: "xs", color: "#999999" },
+    { type: "text", text: "内容", size: "xs", color: "#999999" },
     { type: "text", text: extracted.task, size: "md", weight: "bold", color: "#222222", wrap: true },
     { type: "separator", margin: "md", color: "#E0E0E0" },
     {
@@ -14,43 +15,43 @@ function buildCompleteMessage(extracted, taskId, dod) {
         {
           type: "box", layout: "vertical", flex: 1,
           contents: [
-            { type: "text", text: "📅 期限", size: "xs", color: "#999999" },
+            { type: "text", text: "期限", size: "xs", color: "#999999" },
             { type: "text", text: extracted.deadline || '未設定', size: "sm", color: "#444444", wrap: true }
           ]
         },
         {
           type: "box", layout: "vertical", flex: 1,
           contents: [
-            { type: "text", text: "🙋 担当", size: "xs", color: "#999999" },
+            { type: "text", text: "担当", size: "xs", color: "#999999" },
             { type: "text", text: extracted.assignee || '未設定', size: "sm", color: "#444444", wrap: true }
           ]
         }
       ]
     },
     { type: "separator", margin: "md", color: "#E0E0E0" },
-    { type: "text", text: "📊 ステータス: 未着手", size: "sm", color: "#888888" }
+    { type: "text", text: "ステータス: 未着手", size: "sm", color: "#888888" }
   ];
 
   if (dod && dod.dod && dod.dod.length > 0) {
     bodyContents.push({ type: "separator", margin: "md", color: "#E0E0E0" });
     
     const typeLabel = dod.type && dod.type !== '汎用' ? '（' + dod.type + '）' : '';
-    bodyContents.push({ type: "text", text: '🎯 完了の目安' + typeLabel, size: "xs", color: "#999999" });
+    bodyContents.push({ type: "text", text: '完了の目安' + typeLabel, size: "xs", color: "#999999" });
     
     dod.dod.forEach(d => {
-      bodyContents.push({ type: "text", text: '  ☐ ' + d, size: "xs", color: "#666666", wrap: true });
+      bodyContents.push({ type: "text", text: '  ' + d, size: "xs", color: "#666666", wrap: true });
     });
   }
 
   const flexMessage = {
     type: "flex",
-    altText: '✅ タスクを登録しました！「' + extracted.task + '」',
+    altText: 'タスクを登録しました：「' + extracted.task + '」',
     contents: {
       type: "bubble",
       header: {
         type: "box", layout: "vertical", backgroundColor: "#333333",
         contents: [
-          { type: "text", text: "✅ タスクを登録しました！", color: "#FFFFFF", weight: "bold", size: "md", align: "center" }
+          { type: "text", text: "タスクを登録しました", color: "#FFFFFF", weight: "bold", size: "md", align: "center" }
         ]
       },
       body: {
@@ -101,7 +102,7 @@ function buildTaskListMessage(groupId) {
         body: {
           type: "box", layout: "vertical",
           contents: [
-            { type: "text", text: "📋 現在、進行中のタスクはありません。", size: "md", color: "#888888", align: "center", wrap: true }
+            { type: "text", text: "現在、進行中のタスクはありません。", size: "md", color: "#888888", align: "center", wrap: true }
           ]
         }
       }
@@ -121,13 +122,13 @@ function buildTaskListMessage(groupId) {
             type: "box", layout: "vertical", flex: 3,
             contents: [
               { type: "text", text: t.task, size: "sm", weight: "bold", color: "#222222", wrap: true },
-              { type: "text", text: '🙋 ' + (t.assignee || '未設定'), size: "xs", color: "#666666" }
+              { type: "text", text: (t.assignee || '未設定'), size: "xs", color: "#666666" }
             ]
           },
           {
             type: "box", layout: "vertical", flex: 2,
             contents: [
-              { type: "text", text: '📅 ' + (t.deadline || '未設定'), size: "xs", color: "#888888", align: "end" },
+              { type: "text", text: (t.deadline || '未設定'), size: "xs", color: "#888888", align: "end" },
               { type: "text", text: t.status, size: "xs", color: t.status === '進行中' ? '#FF9800' : '#999999', align: "end" }
             ]
           }
@@ -143,7 +144,7 @@ function buildTaskListMessage(groupId) {
       header: {
         type: "box", layout: "vertical", backgroundColor: "#333333",
         contents: [
-          { type: "text", text: '📋 タスク一覧 (' + (i/5 + 1) + ')', color: "#FFFFFF", weight: "bold", size: "sm", align: "center" }
+          { type: "text", text: 'タスク一覧 (' + (i/5 + 1) + ')', color: "#FFFFFF", weight: "bold", size: "sm", align: "center" }
         ]
       },
       body: {
@@ -169,7 +170,7 @@ function buildMenuMessage() {
       header: {
         type: "box", layout: "vertical", backgroundColor: "#333333",
         contents: [
-          { type: "text", text: "📋 e-colleague メニュー", color: "#FFFFFF", weight: "bold", size: "md", align: "center" }
+          { type: "text", text: "e-colleague メニュー", color: "#FFFFFF", weight: "bold", size: "md", align: "center" }
         ]
       },
       body: {
@@ -182,11 +183,42 @@ function buildMenuMessage() {
         type: "box", layout: "vertical", spacing: "sm", backgroundColor: "#FAFAFA",
         contents: [
           { type: "button", style: "primary", color: "#666666",
-            action: { type: "message", label: "📋 タスク一覧", text: "タスク一覧" } },
+            action: { type: "message", label: "タスク一覧", text: "タスク一覧" } },
           { type: "button", style: "primary", color: "#999999",
-            action: { type: "message", label: "❓ 使い方", text: "使い方" } },
+            action: { type: "message", label: "使い方", text: "使い方" } },
           { type: "button", style: "primary", color: "#AAAAAA",
-            action: { type: "message", label: "✅ 完了報告", text: "完了" } }
+            action: { type: "message", label: "完了報告", text: "完了" } }
+        ]
+      }
+    }
+  };
+}
+
+function buildPersonalMenuMessage() {
+  return {
+    type: "flex",
+    altText: "e-colleague 管理者メニュー",
+    contents: {
+      type: "bubble",
+      header: {
+        type: "box", layout: "vertical", backgroundColor: "#333333",
+        contents: [
+          { type: "text", text: "e-colleague 管理者メニュー", color: "#FFFFFF", weight: "bold", size: "md", align: "center" }
+        ]
+      },
+      body: {
+        type: "box", layout: "vertical", spacing: "sm", backgroundColor: "#FAFAFA",
+        contents: [
+          { type: "text", text: "アクティベートキーの確認ができます。", size: "xs", color: "#999999", align: "center", wrap: true }
+        ]
+      },
+      footer: {
+        type: "box", layout: "vertical", spacing: "sm", backgroundColor: "#FAFAFA",
+        contents: [
+          {
+            type: "button", style: "primary", color: "#666666",
+            action: { type: "postback", label: "アクティベートキーを確認", data: "action=showCurrentKey" }
+          }
         ]
       }
     }
@@ -197,10 +229,10 @@ function buildIncompleteMessage(extracted) {
   const question = extracted.question || 'タスクの詳細（期限や担当者）を教えてください。';
   const missing = extracted.missing_fields || [];
   
-  let msg = '📋 タスクを検出しました。';
+  let msg = 'タスクを検出しました。';
   
   if (extracted.task) {
-    msg += '\n📌 内容: ' + extracted.task;
+    msg += '\n内容: ' + extracted.task;
   }
   
   if (missing.length > 0) {

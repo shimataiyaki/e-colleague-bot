@@ -25,7 +25,7 @@ function registerGroup(groupId, replyToken) {
   
   for (let i = 1; i < data.length; i++) {
     if (data[i][0] === groupId) {
-      replyToLine(replyToken, 'このグループはすでに登録済みです。');
+      replyToLine(replyToken, 'このグループはすでに認証済みです。');
       return;
     }
   }
@@ -33,12 +33,12 @@ function registerGroup(groupId, replyToken) {
   sheet.appendRow([groupId, '']);
   
   replyToLine(replyToken,
-    '登録されました！\n\n' +
+    'アクティベートキーが認証されました。\n\n' +
     'このグループでe-colleagueが使えるようになりました。\n\n' +
     'グループID: ' + groupId + '\n\n' +
     'このIDを使って管理者ポータルにログインできます。\n\n' +
     '※本サービスの利用開始をもって、利用規約に同意したものとみなします。\n' +
-    '📄 https://shimataiyaki.github.io/e-colleague/docs/利用規約.pdf'
+    'https://shimataiyaki.github.io/e-colleague/docs/利用規約.pdf'
   );
   
   console.log('グループ認証完了: ' + groupId);
